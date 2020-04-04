@@ -15,5 +15,13 @@
   "bugs": {
     "url": "https://github.com/Destro97/calendly-clone/issues"
   },
-  "homepage": "https://github.com/Destro97/calendly-clone#readme"
+  "homepage": "https://github.com/Destro97/calendly-clone#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.2"
+  }
 }
