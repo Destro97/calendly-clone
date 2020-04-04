@@ -19,6 +19,14 @@ timeSlotSchema.set("toObject", {
   }
 });
 
+timeSlotSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: function (doc, ret) {
+    delete ret._id;
+  }
+});
+
 const SlotSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
