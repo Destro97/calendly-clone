@@ -8,3 +8,13 @@ module.exports.generateToken = (payload) => {
   });
   return token;
 };
+
+module.exports.verifyToken = (token) => {
+  try {
+    const decodedToken = jwt.verify(token, JWT_SECRET);
+    return decodedToken;
+  } catch (err) {
+    console.error(`Error decoding token ${token} as ${err}`);
+    return false;
+  }
+};
