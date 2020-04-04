@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const morgan = require("morgan");
 
 const dbConnection = require("./config/db");
 
@@ -8,7 +7,11 @@ const app = express();
 
 dbConnection();
 
-app.use(morgan("dev"));
+if (process.env.NODE_ENV !== "production") {
+  const morgan = require("morgan");
+  app.use(morgan("dev"));
+}
+
 app.use(cors());
 app.use(express.json({ extended: false }));
 
