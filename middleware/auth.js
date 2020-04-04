@@ -28,9 +28,9 @@ module.exports.verifyTokenMiddleware = async (req, res, next) => {
     next();
   } catch (err) {
     console.error(err);
-    if (err.kind == "ObjectId") {
+    if (err.kind == "ObjectId" || error.name == "CastError") {
       return res.status(400).json({
-        message: "Resource not found"
+        error: "Resource not found"
       });
     }
     return res.status(500).json({

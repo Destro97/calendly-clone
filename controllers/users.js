@@ -106,13 +106,63 @@ module.exports.storeUserSlot = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    if (err.kind == "ObjectId") {
+    if (err.kind == "ObjectId" || error.name == "CastError") {
       return res.status(400).json({
         message: "Resource not found"
       });
     }
     return res.status(500).json({
       error: "Internal Server Error"
+    });
+  }
+};
+
+module.exports.fetchUserSlots = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const userExists = await User.exists({ _id: userId });
+    if (!userExists) {
+      return res.status(400).json({
+        error: "User not found"
+      });
+    }
+    if (req.query.month) {
+      const month = parseInt(req.query.month);
+      if (month < 1 || month > 12) {
+        return res.status(400).json({
+          error: "Invalid Month"
+        });
+      }
+      const monthSlots = await Slot.find({
+        user: userId,
+        month
+      });
+      if (monthSlots.length === 0) {
+        return res.status(404).json({
+          message: "No available slots for specified month"
+        });
+      }
+      return res.json({ slots: monthSlots });
+    } else {
+      const months = await Slot.distinct("month", {
+        user: userId
+      });
+      if (months.length === 0) {
+        return res.status(404).json({
+          message: "No available slots for specified user"
+        });
+      }
+      return res.json({ months });
+    }
+  } catch (error) {
+    console.error(error);
+    if (error.kind == "ObjectId" || error.name == "CastError") {
+      return res.status(400).json({
+        error: "Resource not found"
+      });
+    }
+    res.status(500).json({
+      error: "Internal server error"
     });
   }
 };
