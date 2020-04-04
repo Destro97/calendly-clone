@@ -7,22 +7,22 @@ const UserSchema = new Schema({
     type: String,
     unique: true,
     required: true,
-    trim: true,
+    trim: true
   },
   avatar: {
-    type: String,
+    type: String
   },
   googleID: {
     type: String,
-    trim: true,
+    trim: true
   },
   created: {
     type: Date,
-    default: Date.now(),
+    default: Date.now()
   },
   online: {
-    type: Boolean,
-  },
+    type: Boolean
+  }
 });
 
 UserSchema.set("toObject", {
@@ -30,7 +30,7 @@ UserSchema.set("toObject", {
   versionKey: false,
   transform: function (doc, ret) {
     delete ret._id;
-  },
+  }
 });
 
 UserSchema.set("toJSON", {
@@ -38,7 +38,7 @@ UserSchema.set("toJSON", {
   versionKey: false,
   transform: function (doc, ret) {
     delete ret._id;
-  },
+  }
 });
 
 module.exports = User = mongoose.model("users", UserSchema);
