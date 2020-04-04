@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-router.use("/auth", require("./api/auth"));
-router.use("/users", require("./api/users"));
+const { fetchAllUsers } = require("../../controllers/users");
+
+router.get("/", fetchAllUsers);
 
 module.exports = router;
