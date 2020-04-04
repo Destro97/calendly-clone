@@ -1,0 +1,19 @@
+{
+  "name": "calendly-clone",
+  "version": "1.0.0",
+  "description": "Backend APIs for a basic clone of calendly.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Destro97/calendly-clone.git"
+  },
+  "author": "Yash Mangla",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Destro97/calendly-clone/issues"
+  },
+  "homepage": "https://github.com/Destro97/calendly-clone#readme"
+}
