@@ -4,7 +4,7 @@
   "description": "Backend APIs for a basic clone of calendly.",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon server"
   },
   "repository": {
     "type": "git",
