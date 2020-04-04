@@ -7,35 +7,38 @@ const UserSchema = new Schema({
     type: String,
     unique: true,
     required: true,
-    trim: true
+    trim: true,
   },
   avatar: {
-    type: String
+    type: String,
   },
   googleID: {
     type: String,
-    trim: true
+    trim: true,
   },
   created: {
     type: Date,
-    default: Date.now()
-  }
+    default: Date.now(),
+  },
+  online: {
+    type: Boolean,
+  },
 });
 
 UserSchema.set("toObject", {
   virtuals: true,
   versionKey: false,
-  transform: function(doc, ret) {
+  transform: function (doc, ret) {
     delete ret._id;
-  }
+  },
 });
 
 UserSchema.set("toJSON", {
   virtuals: true,
   versionKey: false,
-  transform: function(doc, ret) {
+  transform: function (doc, ret) {
     delete ret._id;
-  }
+  },
 });
 
 module.exports = User = mongoose.model("users", UserSchema);
