@@ -180,8 +180,13 @@ module.exports.bookSlot = async (req, res) => {
       error: "User not found"
     });
   }
-  const slotId = req.params.slotId;
-  const timeSlotId = req.query.time_slot;
+  const slotId = req.params.slotId || null;
+  const timeSlotId = req.query.time_slot || null;
+  if (!slotId || !timeSlotId) {
+    return res.status(400).json({
+      error: "Required Parameters missing"
+    });
+  }
   try {
     const userSlot = await Slot.findById(slotId).populate("user", "email");
     if (!userSlot) {
