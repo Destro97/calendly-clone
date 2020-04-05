@@ -15,7 +15,7 @@ if (process.env.NODE_ENV !== "production") {
 app.use(cors());
 app.use(express.json({ extended: false }));
 
-app.use("/api", require("./routes"));
+app.use("/", require("./routes"));
 
 const PORT = process.env.PORT || 5000;
 

@@ -53,13 +53,7 @@ module.exports.storeUserSlot = async (req, res) => {
     return res.status(400).json({ error });
   }
   try {
-    const userId = req.params.id;
     const user = req.user;
-    if (userId !== user.id) {
-      return res.status(401).json({
-        error: "User not Authorised"
-      });
-    }
     const { month, date, start, end } = req.body;
     error = invalidInputChecker(month, date, start, end);
     if (error) {
@@ -186,8 +180,13 @@ module.exports.bookSlot = async (req, res) => {
       error: "User not found"
     });
   }
-  const slotId = req.params.slotId;
-  const timeSlotId = req.query.time_slot;
+  const slotId = req.params.slotId || null;
+  const timeSlotId = req.query.time_slot || null;
+  if (!slotId || !timeSlotId) {
+    return res.status(400).json({
+      error: "Required Parameters missing"
+    });
+  }
   try {
     const userSlot = await Slot.findById(slotId).populate("user", "email");
     if (!userSlot) {
