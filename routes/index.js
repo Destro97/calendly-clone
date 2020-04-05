@@ -60,6 +60,30 @@ router.get("/", (req, res) => {
               "The 'token' returned in the response after successful user Login via Google OAuth."
           }
         }
+      },
+      RequestBody: {
+        month: {
+          Required: true,
+          Type: "Number",
+          Description: "Denotes the month of the slot."
+        },
+        date: {
+          Required: true,
+          Type: "Number",
+          Description: "Denotes the date of month of the slot."
+        },
+        start: {
+          Required: true,
+          Type: "Number",
+          Description:
+            "Denotes the starting hour of 1 hour time slots on the specified date of month of the slot."
+        },
+        end: {
+          Required: true,
+          Type: "Number",
+          Description:
+            "Denotes the ending hour of 1 hour time slots on the specified date of month of the slot."
+        }
       }
     },
     "/users/{user_id}/slots": {
@@ -132,6 +156,20 @@ router.get("/", (req, res) => {
             Description:
               "Identifier to indicate which time slot of slot with id 'slot_id' for user with id 'user_id' is being requested to be booked. Can be inferred from 'id' key in the key 'time_slots' in the Response of '/users/{user_id}/slots' GET."
           }
+        }
+      },
+      RequestBody: {
+        summary: {
+          Required: true,
+          Type: "String",
+          Description:
+            "Denotes the title of the calender event shown on Google Calender."
+        },
+        description: {
+          Required: true,
+          Type: "String",
+          Description:
+            "Denotes the description displayed in Card of the calender event displayed on Google Calender."
         }
       }
     }
