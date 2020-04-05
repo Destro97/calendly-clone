@@ -93,6 +93,10 @@ module.exports.createEvent = async (
   const { year, month, date, timeSlot } = slotData;
   const start = new Date(year, month - 1, date, timeSlot.start).toISOString();
   const end = new Date(year, month - 1, date, timeSlot.end).toISOString();
+  console.log(
+    "time offset ====================== ",
+    new Date(year, month - 1, date, timeSlot.start).getTimezoneOffset()
+  );
   const event = await calenderClient.events.insert({
     calendarId: "primary",
     requestBody: {
