@@ -1,6 +1,5 @@
 const { google } = require("googleapis");
 
-const User = require("../models/User");
 const {
   googleClientID,
   googleClientSecret,
