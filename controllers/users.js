@@ -53,13 +53,7 @@ module.exports.storeUserSlot = async (req, res) => {
     return res.status(400).json({ error });
   }
   try {
-    const userId = req.params.id;
     const user = req.user;
-    if (userId !== user.id) {
-      return res.status(401).json({
-        error: "User not Authorised"
-      });
-    }
     const { month, date, start, end } = req.body;
     error = invalidInputChecker(month, date, start, end);
     if (error) {
