@@ -6,3 +6,8 @@ module.exports.storeUserSlotValidator = [
   check("start", "Start time of slot(s) is required").not().isEmpty(),
   check("end", "End time of slot(s) is required").not().isEmpty()
 ];
+
+module.exports.bookSlotValidator = [
+  check("summary", "Summary is required").not().isEmpty(),
+  check("description", "Description is required").not().isEmpty()
+];
