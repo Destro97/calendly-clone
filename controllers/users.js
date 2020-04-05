@@ -2,6 +2,7 @@ const { errorHandler } = require("../services/errorHandlers");
 
 const User = require("../models/User");
 const Slot = require("../models/Slot");
+const { createEvent } = require("../services/googleAuth");
 
 module.exports.fetchAllUsers = async (req, res) => {
   try {
@@ -163,6 +164,80 @@ module.exports.fetchUserSlots = async (req, res) => {
     }
     res.status(500).json({
       error: "Internal server error"
+    });
+  }
+};
+
+module.exports.bookSlot = async (req, res) => {
+  const error = errorHandler(req);
+  if (error) {
+    return res.status(400).json({ error });
+  }
+  const googleTokens = req.google_tokens;
+  const userId = req.params.id;
+  if (req.user.id === userId) {
+    return res.status(400).json({
+      error: "Cannot book a slot for self"
+    });
+  }
+  const userExists = await User.exists({ _id: userId });
+  if (!userExists) {
+    return res.status(400).json({
+      error: "User not found"
+    });
+  }
+  const slotId = req.params.slotId;
+  const timeSlotId = req.query.time_slot;
+  try {
+    const userSlot = await Slot.findById(slotId).populate("user", "email");
+    if (!userSlot) {
+      return res.status(400).json({
+        error: "Requested slot not found"
+      });
+    }
+    if (userId !== userSlot.user.id) {
+      return res.status(400).json({
+        error: "Invalid user and slot combination"
+      });
+    }
+    const timeSlot = userSlot.time_slots.id(timeSlotId);
+    if (!timeSlot || timeSlot.booked) {
+      return res.status(400).json({
+        error: "Requested time slot is not available"
+      });
+    }
+    const { year, month, date } = userSlot;
+    const attendeeEmail = userSlot.user.email;
+    const { summary, description } = req.body;
+    const slotData = {
+      year,
+      month,
+      date,
+      timeSlot
+    };
+    const event = await createEvent(
+      googleTokens,
+      attendeeEmail,
+      slotData,
+      summary,
+      description
+    );
+    if (event && event.status === 200) {
+      timeSlot.booked = true;
+      await userSlot.save();
+      return res.json({ success: true });
+    } else {
+      console.error(
+        `Booking slot failed with google create event response ${event}`
+      );
+      return res.status(500).json({
+        error: "Internal Server Error"
+      });
+    }
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      error: "Internal Server Error"
     });
   }
 };

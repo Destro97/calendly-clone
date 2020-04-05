@@ -41,7 +41,7 @@ module.exports.urlGoogle = () => {
   return url;
 };
 
-const getOAuth2Api = (auth) => {
+const getOAuth2Client = (auth) => {
   return google.oauth2({
     version: "v1",
     auth
@@ -53,7 +53,7 @@ module.exports.getGoogleAccountFromCode = async (code) => {
   const data = await auth.getToken(code);
   const tokens = data.tokens;
   auth.setCredentials(tokens);
-  const oauth2Client = getOAuth2Api(auth);
+  const oauth2Client = getOAuth2Client(auth);
   const me = await oauth2Client.userinfo.get({
     auth
   });
@@ -72,4 +72,54 @@ module.exports.getGoogleAccountFromCode = async (code) => {
     console.error(`Error occured ${error}`);
     return { error };
   }
+};
+
+const getCalenderClient = (auth) => {
+  return google.calendar({
+    version: "v3",
+    auth
+  });
+};
+
+module.exports.createEvent = async (
+  tokens,
+  attendeeEmail,
+  slotData,
+  summary,
+  description
+) => {
+  const auth = googleAuthConnection();
+  auth.setCredentials(tokens);
+  const calenderClient = getCalenderClient(auth);
+  const { year, month, date, timeSlot } = slotData;
+  const start = new Date(year, month - 1, date, timeSlot.start).toISOString();
+  const end = new Date(year, month - 1, date, timeSlot.end).toISOString();
+  const event = await calenderClient.events.insert({
+    calendarId: "primary",
+    requestBody: {
+      attendees: [
+        {
+          email: attendeeEmail
+        }
+      ],
+      creator: {
+        self: true
+      },
+      organizer: {
+        self: true
+      },
+      start: {
+        dateTime: start,
+        timeZone: "Asia/Kolkata"
+      },
+      end: {
+        dateTime: end,
+        timeZone: "Asia/Kolkata"
+      },
+      summary,
+      description
+    },
+    sendUpdates: "all"
+  });
+  return event;
 };
