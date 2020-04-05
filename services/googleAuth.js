@@ -91,12 +91,13 @@ module.exports.createEvent = async (
   auth.setCredentials(tokens);
   const calenderClient = getCalenderClient(auth);
   const { year, month, date, timeSlot } = slotData;
-  const start = new Date(year, month - 1, date, timeSlot.start).toISOString();
-  const end = new Date(year, month - 1, date, timeSlot.end).toISOString();
-  console.log(
-    "time offset ====================== ",
-    new Date(year, month - 1, date, timeSlot.start).getTimezoneOffset()
-  );
+  let start = new Date(year, month - 1, date, timeSlot.start);
+  let end = new Date(year, month - 1, date, timeSlot.end);
+  const timeOffset = new Date().getTimezoneOffset();
+  if (timeOffset === 0) {
+    start.setHours(start.getHours() - 5, start.getMinutes() - 30);
+    end.setHours(end.getHours() - 5, end.getMinutes() - 30);
+  }
   const event = await calenderClient.events.insert({
     calendarId: "primary",
     requestBody: {
@@ -112,11 +113,11 @@ module.exports.createEvent = async (
         self: true
       },
       start: {
-        dateTime: start,
+        dateTime: start.toISOString(),
         timeZone: "Asia/Kolkata"
       },
       end: {
-        dateTime: end,
+        dateTime: end.toISOString(),
         timeZone: "Asia/Kolkata"
       },
       summary,
