@@ -9,13 +9,13 @@ module.exports.fetchAllUsers = async (req, res) => {
     const users = await User.find();
     if (users.length === 0)
       return res.status(404).json({
-        message: "No users found"
+        error: "No users found"
       });
     return res.status(200).json({ users });
   } catch (err) {
     console.error(`Error occured while fetching users as ${err}`);
     return res.status(500).json({
-      message: "Internal Server Error"
+      error: "Internal Server Error"
     });
   }
 };
@@ -103,7 +103,7 @@ module.exports.storeUserSlot = async (req, res) => {
     console.error(err);
     if (err.kind == "ObjectId" || error.name == "CastError") {
       return res.status(400).json({
-        message: "Resource not found"
+        error: "Resource not found"
       });
     }
     return res.status(500).json({
@@ -134,7 +134,7 @@ module.exports.fetchUserSlots = async (req, res) => {
       });
       if (monthSlots.length === 0) {
         return res.status(404).json({
-          message: "No available slots for specified month"
+          error: "No available slots for specified month"
         });
       }
       return res.json({ slots: monthSlots });
@@ -144,7 +144,7 @@ module.exports.fetchUserSlots = async (req, res) => {
       });
       if (months.length === 0) {
         return res.status(404).json({
-          message: "No available slots for specified user"
+          error: "No available slots for specified user"
         });
       }
       return res.json({ months });
